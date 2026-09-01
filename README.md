@@ -1,2 +1,0 @@
-# backend
-poryecto del sena
