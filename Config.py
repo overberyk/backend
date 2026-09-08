@@ -30,8 +30,8 @@ limiter = Limiter(key_func=get_remote_address)
 databaseUrl = os.getenv("DATABASE_URL")
 if not databaseUrl:
     raise RuntimeError("DATABASE_URL no está configurada")
-
-engine = create_engine(databaseUrl, pool_pre_ping=True)
+    
+engine = create_engine(databaseUrl, pool_pre_ping=True, connect_args={"ssl": {}})
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
