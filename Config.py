@@ -24,14 +24,19 @@ from sqlalchemy.orm import sessionmaker
 
 limiter = Limiter(key_func=get_remote_address)
 
-
 # --- Base de datos ---
 
 databaseUrl = os.getenv("DATABASE_URL")
 if not databaseUrl:
     raise RuntimeError("DATABASE_URL no está configurada")
-    
-engine = create_engine(databaseUrl, pool_pre_ping=True, connect_args={"ssl": {}})
+
+connectArgs = {}
+if databaseUrl.startswith("mysql"):
+    connectArgs = {"ssl": {}}
+elif databaseUrl.startswith("sqlite"):
+    connectArgs = {"check_same_thread": False}
+
+engine = create_engine(databaseUrl, pool_pre_ping=True, connect_args=connectArgs)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
